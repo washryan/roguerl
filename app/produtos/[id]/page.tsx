@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Heart, Share2, Star } from 'lucide-react'
+import { Heart, Share2, Star } from "lucide-react"
 import AddToCartButton from "@/components/add-to-cart-button"
 
 export default function ProdutoPage({ params }: { params: { id: string } }) {
@@ -165,7 +165,14 @@ export default function ProdutoPage({ params }: { params: { id: string } }) {
           </div>
 
           <div className="flex gap-4">
-            <AddToCartButton productId={product.id} size={selectedSize} color={selectedColor} quantity={quantity} />
+            <AddToCartButton
+              productId={product.id}
+              variantId={
+                product.variants.find((v: any) => v.size === selectedSize && v.color === selectedColor)?.id || ""
+              }
+              quantity={quantity}
+              className="flex-1"
+            />
             <Button variant="outline" size="icon">
               <Heart className="h-4 w-4" />
             </Button>

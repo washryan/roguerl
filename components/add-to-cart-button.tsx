@@ -13,7 +13,7 @@ interface AddToCartButtonProps {
   className?: string
 }
 
-export function AddToCartButton({ productId, variantId, quantity, disabled, className }: AddToCartButtonProps) {
+export default function AddToCartButton({ productId, variantId, quantity, disabled, className }: AddToCartButtonProps) {
   const [isLoading, setIsLoading] = useState(false)
   const { addItem } = useCart()
 
