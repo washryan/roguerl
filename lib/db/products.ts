@@ -676,8 +676,8 @@ export async function getCategories(): Promise<string[]> {
   // Simular um atraso de rede
   await new Promise((resolve) => setTimeout(resolve, 300))
 
-  const categories = [...new Set(products.map((product) => product.category))]
-  return categories
+  const categoriesSet = new Set(products.map((product) => product.category))
+  return Array.from(categoriesSet)
 }
 
 // Função para obter subcategorias de uma categoria
@@ -690,14 +690,13 @@ export async function getSubcategories(category?: string): Promise<string[]> {
     filteredProducts = products.filter((p) => p.category === category)
   }
 
-  const subcategories = [
-    ...new Set(
-      filteredProducts
-        .map((product) => product.subcategory)
-        .filter((subcategory): subcategory is string => !!subcategory),
-    ),
-  ]
-  return subcategories
+  const subcategoriesSet = new Set(
+    filteredProducts
+      .map((product) => product.subcategory)
+      .filter((subcategory): subcategory is string => !!subcategory),
+  )
+
+  return Array.from(subcategoriesSet)
 }
 
 // Função para obter todas as cores disponíveis
@@ -705,8 +704,8 @@ export async function getColors(): Promise<string[]> {
   // Simular um atraso de rede
   await new Promise((resolve) => setTimeout(resolve, 300))
 
-  const colors = [...new Set(products.flatMap((product) => product.variants.map((variant) => variant.color)))]
-  return colors
+  const colorsSet = new Set(products.flatMap((product) => product.variants.map((variant) => variant.color)))
+  return Array.from(colorsSet)
 }
 
 // Função para obter todos os tamanhos disponíveis
@@ -714,8 +713,8 @@ export async function getSizes(): Promise<string[]> {
   // Simular um atraso de rede
   await new Promise((resolve) => setTimeout(resolve, 300))
 
-  const sizes = [...new Set(products.flatMap((product) => product.variants.map((variant) => variant.size)))]
-  return sizes
+  const sizesSet = new Set(products.flatMap((product) => product.variants.map((variant) => variant.size)))
+  return Array.from(sizesSet)
 }
 
 // Função para obter todas as tags disponíveis
@@ -723,6 +722,6 @@ export async function getTags(): Promise<string[]> {
   // Simular um atraso de rede
   await new Promise((resolve) => setTimeout(resolve, 300))
 
-  const tags = [...new Set(products.flatMap((product) => product.tags))]
-  return tags
+  const tagsSet = new Set(products.flatMap((product) => product.tags))
+  return Array.from(tagsSet)
 }

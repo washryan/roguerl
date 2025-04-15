@@ -10,7 +10,7 @@ import { Pagination } from "@/components/pagination"
 import { useProducts } from "@/hooks/use-products"
 import { Filter, X } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import type { ProductFilters as ProductFiltersType } from "@/types/product"
+import type { ProductFilters as ProductFiltersType } from "@/lib/types"
 
 export default function ProdutosPage() {
   const searchParams = useSearchParams()
