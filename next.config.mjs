@@ -1,10 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    reactStrictMode: true,
-    images: {
-      domains: ['placeholder.svg'],
-    },
-  };
-  
-  export default nextConfig;
-  
+  reactStrictMode: true,
+  images: {
+    domains: ['placeholder.svg'],
+  },
+};
+
+export default nextConfig;
