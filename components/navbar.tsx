@@ -1,7 +1,8 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ShoppingCart, Menu, Search } from "lucide-react"
+import { Menu, Search } from "lucide-react"
 import UserNav from "@/components/user-nav"
+import { CartButton } from "@/components/cart-button"
 
 export default function Navbar() {
   return (
@@ -35,11 +36,7 @@ export default function Navbar() {
           <Button variant="ghost" size="icon">
             <Search className="h-5 w-5" />
           </Button>
-          <Link href="/carrinho">
-            <Button variant="ghost" size="icon">
-              <ShoppingCart className="h-5 w-5" />
-            </Button>
-          </Link>
+          <CartButton />
           <UserNav />
         </div>
       </div>

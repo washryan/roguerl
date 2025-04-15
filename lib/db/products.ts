@@ -1,4 +1,4 @@
-import type { Product, ProductFilters, ProductsResponse } from "@/types/product"
+import type { Product, ProductFilters, ProductsResponse } from "@/lib/types"
 
 // Simulação de banco de dados com produtos
 const products: Product[] = [

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import type { Product, ProductFilters, ProductsResponse } from "@/types/product"
+import type { Product, ProductFilters, ProductsResponse } from "@/lib/types"
 
 export function useProducts(initialFilters: ProductFilters = {}) {
   const [products, setProducts] = useState<Product[]>([])

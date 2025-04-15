@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
-import type { ProductFilters as ProductFiltersType } from "@/types/product"
+import type { ProductFilters as ProductFiltersType } from "@/lib/types"
 import { X } from "lucide-react"
 
 interface ProductFiltersProps {

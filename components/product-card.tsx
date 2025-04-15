@@ -2,7 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import type { Product } from "@/types/product"
+import type { Product } from "@/lib/types"
 
 interface ProductCardProps {
   product: Product

@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getProducts } from "@/lib/db/products"
-import type { ProductFilters } from "@/types/product"
+import type { ProductFilters } from "@/lib/types"
 
 export async function GET(request: NextRequest) {
   try {
