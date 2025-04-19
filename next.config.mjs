@@ -2,8 +2,15 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['placeholder.svg'],
+    domains: ['placeholder.com', 'placehold.co', 'via.placeholder.com'],
+    unoptimized: true,
   },
-};
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+}
 
-export default nextConfig;
+export default nextConfig

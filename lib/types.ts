@@ -1,7 +1,7 @@
 export interface ProductImage {
   id: string
   url: string
-  alt: string
+  alt?: string
 }
 
 export interface ProductVariant {
@@ -13,6 +13,7 @@ export interface ProductVariant {
   price: number
   compareAtPrice?: number
   inventory: number
+  material?: string
 }
 
 export interface Product {
@@ -32,14 +33,6 @@ export interface Product {
   updatedAt: string
 }
 
-export interface ProductsResponse {
-  products: Product[]
-  total: number
-  page: number
-  pageSize: number
-  totalPages: number
-}
-
 export interface ProductFilters {
   category?: string
   subcategory?: string
@@ -50,6 +43,14 @@ export interface ProductFilters {
   tags?: string[]
   sort?: "price-asc" | "price-desc" | "newest" | "rating" | "popularity"
   search?: string
+}
+
+export interface ProductsResponse {
+  products: Product[]
+  total: number
+  page: number
+  pageSize: number
+  totalPages: number
 }
 
 export interface CartItem {
@@ -94,4 +95,28 @@ export interface Cart {
   }
   total: number
   itemCount: number
+}
+
+export interface Review {
+  id: string
+  productId: string
+  userId: string
+  userName: string
+  userAvatar?: string
+  rating: number
+  title: string
+  comment: string
+  images: ProductImage[]
+  verified: boolean
+  helpful: number
+  notHelpful: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ReviewFilters {
+  rating?: number
+  verified?: boolean
+  withImages?: boolean
+  sortBy?: "newest" | "oldest" | "highest" | "lowest" | "mostHelpful"
 }

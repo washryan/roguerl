@@ -7,17 +7,19 @@ const products: Product[] = [
     name: "Camiseta Oversized Rogue",
     slug: "camiseta-oversized-rogue",
     description:
-      "Camiseta oversized com estampa exclusiva. Feita com algodão 100% orgânico, proporciona conforto e estilo para o dia a dia.",
+      "Camiseta oversized com estampa exclusiva. Feita com algodão 100% orgânico, proporciona conforto e estilo para o dia a dia. O corte oversized oferece um visual moderno e descontraído, perfeito para diversas ocasiões.",
     features: [
       "Algodão 100% orgânico",
       "Estampa exclusiva",
       "Corte oversized",
       "Gola reforçada",
       "Lavagem industrial para maior maciez",
+      "Etiqueta emborrachada",
+      "Acabamento premium",
     ],
     category: "camisetas",
     subcategory: "oversized",
-    tags: ["oversized", "algodão orgânico", "estampa", "exclusivo"],
+    tags: ["oversized", "algodão orgânico", "estampa", "exclusivo", "sustentável"],
     images: [
       {
         id: "1-1",
@@ -34,6 +36,16 @@ const products: Product[] = [
         url: "/placeholder.svg?height=600&width=600",
         alt: "Camiseta Oversized Rogue - Detalhe",
       },
+      {
+        id: "1-4",
+        url: "/placeholder.svg?height=600&width=600",
+        alt: "Camiseta Oversized Rogue - Manga",
+      },
+      {
+        id: "1-5",
+        url: "/placeholder.svg?height=600&width=600",
+        alt: "Camiseta Oversized Rogue - Etiqueta",
+      },
     ],
     variants: [
       {
@@ -45,6 +57,7 @@ const products: Product[] = [
         price: 89.9,
         compareAtPrice: 119.9,
         inventory: 15,
+        material: "100% Algodão Orgânico",
       },
       {
         id: "1-2",
@@ -55,6 +68,7 @@ const products: Product[] = [
         price: 89.9,
         compareAtPrice: 119.9,
         inventory: 20,
+        material: "100% Algodão Orgânico",
       },
       {
         id: "1-3",
@@ -65,6 +79,7 @@ const products: Product[] = [
         price: 89.9,
         compareAtPrice: 119.9,
         inventory: 18,
+        material: "100% Algodão Orgânico",
       },
       {
         id: "1-4",
@@ -75,6 +90,7 @@ const products: Product[] = [
         price: 89.9,
         compareAtPrice: 119.9,
         inventory: 10,
+        material: "100% Algodão Orgânico",
       },
       {
         id: "1-5",
@@ -85,6 +101,7 @@ const products: Product[] = [
         price: 89.9,
         compareAtPrice: 119.9,
         inventory: 12,
+        material: "100% Algodão Orgânico",
       },
       {
         id: "1-6",
@@ -95,6 +112,7 @@ const products: Product[] = [
         price: 89.9,
         compareAtPrice: 119.9,
         inventory: 22,
+        material: "100% Algodão Orgânico",
       },
       {
         id: "1-7",
@@ -105,6 +123,7 @@ const products: Product[] = [
         price: 89.9,
         compareAtPrice: 119.9,
         inventory: 16,
+        material: "100% Algodão Orgânico",
       },
       {
         id: "1-8",
@@ -115,6 +134,7 @@ const products: Product[] = [
         price: 89.9,
         compareAtPrice: 119.9,
         inventory: 8,
+        material: "100% Algodão Orgânico",
       },
     ],
     rating: 4.8,
@@ -724,4 +744,17 @@ export async function getTags(): Promise<string[]> {
 
   const tagsSet = new Set(products.flatMap((product) => product.tags))
   return Array.from(tagsSet)
+}
+
+// Função para obter produtos relacionados
+export async function getRelatedProducts(productId: string, category: string): Promise<Product[]> {
+  // Simular atraso de rede
+  await new Promise((resolve) => setTimeout(resolve, 500))
+
+  // Filtrar produtos da mesma categoria, excluindo o produto atual
+  const relatedProducts = products
+    .filter((product) => product.category === category && product.id !== productId)
+    .slice(0, 8) // Limitar a 8 produtos relacionados
+
+  return relatedProducts
 }
