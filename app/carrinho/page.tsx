@@ -1,19 +1,42 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
 import { useCart } from "@/hooks/use-cart"
-import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from "lucide-react"
+import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, Tag, Truck, X } from "lucide-react"
 
 export default function CarrinhoPage() {
   const router = useRouter()
-  const { cart, loading, error, updateItemQuantity, removeItem, clearCart } = useCart()
+  const {
+    cart,
+    loading,
+    error,
+    couponLoading,
+    shippingLoading,
+    shippingOptions,
+    updateItemQuantity,
+    removeItem,
+    clearCart,
+    applyCoupon,
+    removeCoupon,
+    calculateShipping,
+    selectShippingOption,
+  } = useCart()
+
   const [isUpdating, setIsUpdating] = useState<string | null>(null)
+  const [couponCode, setCouponCode] = useState("")
+  const [zipCode, setZipCode] = useState("")
+  const [isCalculatingShipping, setIsCalculatingShipping] = useState(false)
 
   // Função para atualizar a quantidade com debounce
   const handleQuantityChange = async (itemId: string, newQuantity: number) => {
@@ -41,6 +64,50 @@ export default function CarrinhoPage() {
   const handleClearCart = async () => {
     if (window.confirm("Tem certeza que deseja limpar o carrinho?")) {
       await clearCart()
+    }
+  }
+
+  // Função para aplicar cupom
+  const handleApplyCoupon = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!couponCode.trim()) return
+
+    try {
+      await applyCoupon(couponCode)
+    } catch (error) {
+      // Erro já tratado no hook
+    }
+  }
+
+  // Função para remover cupom
+  const handleRemoveCoupon = async () => {
+    try {
+      await removeCoupon()
+      setCouponCode("")
+    } catch (error) {
+      // Erro já tratado no hook
+    }
+  }
+
+  // Função para calcular frete
+  const handleCalculateShipping = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!zipCode.trim() || zipCode.length < 8) return
+
+    setIsCalculatingShipping(true)
+    try {
+      await calculateShipping(zipCode)
+    } finally {
+      setIsCalculatingShipping(false)
+    }
+  }
+
+  // Função para selecionar opção de frete
+  const handleSelectShipping = async (optionId: string) => {
+    try {
+      await selectShippingOption(optionId)
+    } catch (error) {
+      // Erro já tratado no hook
     }
   }
 
@@ -187,19 +254,137 @@ export default function CarrinhoPage() {
                   <span className="text-muted-foreground">Subtotal</span>
                   <span>R$ {cart.subtotal.toFixed(2).replace(".", ",")}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Frete</span>
-                  <span>Calculado no checkout</span>
+
+                {/* Cupom de desconto */}
+                {cart.discounts.couponCode ? (
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center">
+                      <Tag className="h-4 w-4 mr-1 text-green-500" />
+                      <span className="text-green-500">Cupom: {cart.discounts.couponCode}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="text-green-500">
+                        -R$ {cart.discounts.couponDiscount.toFixed(2).replace(".", ",")}
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 ml-1"
+                        onClick={handleRemoveCoupon}
+                        disabled={couponLoading}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <form onSubmit={handleApplyCoupon} className="flex gap-2">
+                    <Input
+                      placeholder="Cupom de desconto"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      disabled={couponLoading}
+                      className="flex-1"
+                    />
+                    <Button type="submit" variant="outline" size="sm" disabled={couponLoading || !couponCode.trim()}>
+                      {couponLoading ? (
+                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+                      ) : (
+                        "Aplicar"
+                      )}
+                    </Button>
+                  </form>
+                )}
+
+                {/* Cálculo de frete */}
+                <div className="pt-2">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-muted-foreground flex items-center">
+                      <Truck className="h-4 w-4 mr-1" />
+                      Frete
+                    </span>
+                    {cart.shipping.shippingOption ? (
+                      <span>R$ {cart.shipping.shippingPrice.toFixed(2).replace(".", ",")}</span>
+                    ) : (
+                      <span>Calcular</span>
+                    )}
+                  </div>
+
+                  {!cart.shipping.shippingOption ? (
+                    <form onSubmit={handleCalculateShipping} className="flex gap-2">
+                      <Input
+                        placeholder="CEP"
+                        value={zipCode}
+                        onChange={(e) => setZipCode(e.target.value.replace(/\D/g, ""))}
+                        maxLength={8}
+                        disabled={shippingLoading}
+                        className="flex-1"
+                      />
+                      <Button
+                        type="submit"
+                        variant="outline"
+                        size="sm"
+                        disabled={shippingLoading || zipCode.length < 8}
+                      >
+                        {shippingLoading ? (
+                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+                        ) : (
+                          "Calcular"
+                        )}
+                      </Button>
+                    </form>
+                  ) : (
+                    <div className="text-sm text-muted-foreground">
+                      Entrega para o CEP {cart.shipping.zipCode}
+                      <Button
+                        variant="link"
+                        size="sm"
+                        className="h-auto p-0 ml-1"
+                        onClick={() => {
+                          setZipCode("")
+                          calculateShipping("")
+                        }}
+                      >
+                        Alterar
+                      </Button>
+                    </div>
+                  )}
+
+                  {/* Opções de frete */}
+                  {shippingOptions.length > 0 && (
+                    <div className="mt-2">
+                      <RadioGroup
+                        value={cart.shipping.shippingOption}
+                        onValueChange={handleSelectShipping}
+                        className="space-y-2"
+                      >
+                        {shippingOptions.map((option) => (
+                          <div key={option.id} className="flex items-center space-x-2 rounded-md border p-2">
+                            <RadioGroupItem value={option.id} id={option.id} />
+                            <Label htmlFor={option.id} className="flex-1">
+                              <div className="font-medium">{option.name}</div>
+                              <div className="text-xs text-muted-foreground">
+                                Entrega em até {option.estimatedDays} dias úteis
+                              </div>
+                            </Label>
+                            <div className="font-medium">R$ {option.price.toFixed(2).replace(".", ",")}</div>
+                          </div>
+                        ))}
+                      </RadioGroup>
+                    </div>
+                  )}
                 </div>
               </div>
+
               <Separator />
+
               <div className="flex justify-between font-medium">
-                <span>Total estimado</span>
+                <span>Total</span>
                 <span>R$ {cart.total.toFixed(2).replace(".", ",")}</span>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-2">
-              <Button className="w-full" onClick={handleCheckout} disabled={loading}>
+              <Button className="w-full" onClick={handleCheckout} disabled={loading || !cart.shipping.shippingOption}>
                 Finalizar Compra
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
